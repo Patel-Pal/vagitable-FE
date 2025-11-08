@@ -92,6 +92,60 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Vegetable Display Section */}
+      <section className="py-20 px-4">
+        <div className="container mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-foreground mb-4">
+              Fresh Vegetables Available Now
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Handpicked seasonal vegetables, delivered fresh from local farms every morning
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+            {[
+              { name: "Tomatoes", emoji: "🍅", price: "$3.99", category: "Fresh" },
+              { name: "Carrots", emoji: "🥕", price: "$2.49", category: "Root" },
+              { name: "Broccoli", emoji: "🥦", price: "$3.49", category: "Green" },
+              { name: "Peppers", emoji: "🫑", price: "$4.99", category: "Fresh" },
+              { name: "Lettuce", emoji: "🥬", price: "$1.99", category: "Leafy" },
+              { name: "Cucumber", emoji: "🥒", price: "$2.99", category: "Fresh" },
+              { name: "Eggplant", emoji: "🍆", price: "$3.29", category: "Fresh" },
+              { name: "Corn", emoji: "🌽", price: "$4.49", category: "Fresh" },
+              { name: "Potato", emoji: "🥔", price: "$2.79", category: "Root" },
+              { name: "Onion", emoji: "🧅", price: "$1.89", category: "Root" },
+              { name: "Garlic", emoji: "🧄", price: "$5.99", category: "Spice" },
+              { name: "Avocado", emoji: "🥑", price: "$6.99", category: "Fresh" },
+            ].map((veg, index) => (
+              <div
+                key={index}
+                className="group bg-card rounded-2xl p-6 hover:shadow-card-hover transition-all duration-300 hover:-translate-y-2 cursor-pointer animate-fade-in"
+                style={{ animationDelay: `${index * 0.05}s` }}
+              >
+                <div className="text-6xl mb-3 group-hover:scale-110 transition-transform duration-300">
+                  {veg.emoji}
+                </div>
+                <div className="space-y-1">
+                  <div className="inline-block px-2 py-0.5 bg-primary/10 rounded text-xs font-medium text-primary mb-2">
+                    {veg.category}
+                  </div>
+                  <h4 className="font-semibold text-foreground text-sm">{veg.name}</h4>
+                  <p className="text-primary font-bold">{veg.price}<span className="text-xs text-muted-foreground">/lb</span></p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <Button size="lg" onClick={() => navigate("/auth?mode=register")}>
+              View All Vegetables
+            </Button>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto">
