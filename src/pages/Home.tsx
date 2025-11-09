@@ -1,6 +1,61 @@
 import { Button } from "@/components/ui/button";
-import { ShoppingBasket, Leaf, TrendingUp, Heart } from "lucide-react";
+import {  Leaf, TrendingUp, Heart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import Header from "@/components/Header";
+import { useEffect, useState } from "react";
+import { productApi } from "@/api/productApi";
+import { Product } from "@/types/product";
+
+const ProductPreview: React.FC = () => {
+  const [items, setItems] = useState<Product[]>([]);
+
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      try {
+        const data = await productApi.list();
+        if (!mounted) return;
+        setItems(data.slice(0, 3));
+      } catch (err) {
+        console.error("Failed to load preview products:", err);
+      }
+    };
+    load();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  if (items.length === 0) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="bg-card rounded-2xl p-6 animate-pulse h-56" />
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {items.map((p) => (
+        <div key={p._id} className="group bg-card rounded-2xl p-6 hover:shadow-card-hover transition-all duration-300 hover:-translate-y-2 cursor-pointer">
+          <div className="h-40 mb-3">
+            {p.image ? (
+              <img src={`/${p.image.replace(/^\//, "")}`} alt={p.name} className="w-full h-full object-cover rounded-md" />
+            ) : (
+              <div className="w-full h-full bg-muted rounded-md flex items-center justify-center text-6xl">🥬</div>
+            )}
+          </div>
+          <div className="space-y-1">
+            <h4 className="font-semibold text-foreground text-lg">{p.name}</h4>
+            <p className="text-primary font-bold">${Number(p.price).toFixed(2)}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 const Home = () => {
   const navigate = useNavigate();
@@ -8,24 +63,7 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
-      <nav className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <ShoppingBasket className="h-8 w-8 text-primary" />
-              <span className="text-2xl font-bold text-foreground">GreenBasket</span>
-            </div>
-            <div className="flex gap-3">
-              <Button variant="outline" onClick={() => navigate("/auth")}>
-                Login
-              </Button>
-              <Button onClick={() => navigate("/auth?mode=register")}>
-                Get Started
-              </Button>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Header />
 
       {/* Hero Section */}
       <section className="py-20 px-4">
@@ -43,11 +81,11 @@ const Home = () => {
               Experience the farm-fresh quality of organic vegetables delivered straight to your doorstep. 
               Supporting local farmers while nourishing your family.
             </p>
-            <div className="flex gap-4 justify-center flex-wrap">
-              <Button size="lg" onClick={() => navigate("/auth?mode=register")}>
+            <div className="flex gap-4 justify-center flx-wrap">
+              <Button size="lg" onClick={() => navigate("/customer/products")}>
                 Start Shopping
               </Button>
-              <Button size="lg" variant="outline" onClick={() => navigate("/auth?mode=register&role=supplier")}>
+              <Button size="lg" variant="outline" onClick={() => navigate("/register")}>
                 Become a Supplier
               </Button>
             </div>
@@ -104,42 +142,13 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
-            {[
-              { name: "Tomatoes", emoji: "🍅", price: "$3.99", category: "Fresh" },
-              { name: "Carrots", emoji: "🥕", price: "$2.49", category: "Root" },
-              { name: "Broccoli", emoji: "🥦", price: "$3.49", category: "Green" },
-              { name: "Peppers", emoji: "🫑", price: "$4.99", category: "Fresh" },
-              { name: "Lettuce", emoji: "🥬", price: "$1.99", category: "Leafy" },
-              { name: "Cucumber", emoji: "🥒", price: "$2.99", category: "Fresh" },
-              { name: "Eggplant", emoji: "🍆", price: "$3.29", category: "Fresh" },
-              { name: "Corn", emoji: "🌽", price: "$4.49", category: "Fresh" },
-              { name: "Potato", emoji: "🥔", price: "$2.79", category: "Root" },
-              { name: "Onion", emoji: "🧅", price: "$1.89", category: "Root" },
-              { name: "Garlic", emoji: "🧄", price: "$5.99", category: "Spice" },
-              { name: "Avocado", emoji: "🥑", price: "$6.99", category: "Fresh" },
-            ].map((veg, index) => (
-              <div
-                key={index}
-                className="group bg-card rounded-2xl p-6 hover:shadow-card-hover transition-all duration-300 hover:-translate-y-2 cursor-pointer animate-fade-in"
-                style={{ animationDelay: `${index * 0.05}s` }}
-              >
-                <div className="text-6xl mb-3 group-hover:scale-110 transition-transform duration-300">
-                  {veg.emoji}
-                </div>
-                <div className="space-y-1">
-                  <div className="inline-block px-2 py-0.5 bg-primary/10 rounded text-xs font-medium text-primary mb-2">
-                    {veg.category}
-                  </div>
-                  <h4 className="font-semibold text-foreground text-sm">{veg.name}</h4>
-                  <p className="text-primary font-bold">{veg.price}<span className="text-xs text-muted-foreground">/lb</span></p>
-                </div>
-              </div>
-            ))}
-          </div>
+          {/* Preview 3 products */}
+          <ProductPreview />
+
+          
 
           <div className="text-center mt-12">
-            <Button size="lg" onClick={() => navigate("/auth?mode=register")}>
+            <Button size="lg" onClick={() => navigate("/customer/products")}>
               View All Vegetables
             </Button>
           </div>
@@ -152,7 +161,7 @@ const Home = () => {
           <div className="bg-hero-gradient rounded-3xl p-12 text-center text-white">
             <h2 className="text-4xl font-bold mb-4">Ready to Go Green?</h2>
             <p className="text-xl mb-8 opacity-90">Join thousands of happy customers enjoying fresh, organic vegetables</p>
-            <Button size="lg" variant="secondary" onClick={() => navigate("/auth?mode=register")}>
+            <Button size="lg" variant="secondary" onClick={() => navigate("/register")}>
               Create Your Account
             </Button>
           </div>
