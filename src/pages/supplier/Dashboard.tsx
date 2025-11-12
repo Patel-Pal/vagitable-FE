@@ -138,10 +138,10 @@ const SupplierDashboard = () => {
               <h1 className="text-3xl font-bold text-foreground">Supplier Dashboard</h1>
               <p className="text-muted-foreground">Manage your products and orders</p>
             </div>
-            <Button onClick={() => navigate("/supplier/add-product")}>
+            {/* <Button onClick={() => navigate("/supplier/add-product")}>
               <Plus className="h-4 w-4 mr-2" />
               Add Product
-            </Button>
+            </Button> */}
             <div className="flex gap-3">
               {!isLoggedIn ? (
                 <>

@@ -38,6 +38,10 @@ const ProductDetailPage: React.FC = () => {
       navigate("/login");
       return;
     }
+    const updatedCart = await cartApi.getCart();
+localStorage.setItem("cart", JSON.stringify(updatedCart.items || []));
+window.dispatchEvent(new Event("storage"));
+
 
     try {
       await cartApi.addToCart(productId, 1);

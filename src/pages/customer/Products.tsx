@@ -59,12 +59,16 @@ const Products: React.FC = () => {
       return;
     }
 
+
+
     try {
       const cart = await cartApi.addToCart(productId, 1);
-  const items = cart.items || [];
-  type CartItem = { _id?: string; id?: string; product?: string };
-  setCart(items.map((it: CartItem) => it._id ?? it.id ?? it.product ?? ""));
+      const items = cart.items || [];
+      type CartItem = { _id?: string; id?: string; product?: string };
+      setCart(items.map((it: CartItem) => it._id ?? it.id ?? it.product ?? ""));
       toast({ title: "Added", description: "Product added to cart" });
+      localStorage.setItem("cart", JSON.stringify(items));
+      window.dispatchEvent(new Event("storage"));
     } catch (err: unknown) {
       console.error("Failed to add to cart:", err);
       type Err = { response?: { data?: { message?: string } }; message?: string };
@@ -78,32 +82,6 @@ const Products: React.FC = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
-      {/* <nav className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <ShoppingBasket className="h-8 w-8 text-primary" />
-              <span className="text-2xl font-bold text-foreground">GreenBasket</span>
-            </div>
-            <div className="flex items-center gap-4">
-              <Button variant="outline" size="icon" className="relative">
-                <ShoppingCart className="h-5 w-5" />
-                {cart.length > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-secondary text-secondary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    {cart.length}
-                  </span>
-                )}
-              </Button>
-              <Button variant="ghost" size="icon">
-                <User className="h-5 w-5" />
-              </Button>
-              <Button variant="ghost" size="icon" onClick={() => navigate("/") }>
-                <LogOut className="h-5 w-5" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </nav> */}
 
       <Header />
 

@@ -100,9 +100,9 @@ const AdminDashboard = () => {
               <p className="text-muted-foreground">Manage GreenBasket platform</p>
             </div>
             <div className="flex gap-3">
-              <Button variant="outline" onClick={() => navigate("/")}>
+              {/* <Button variant="outline" onClick={() => navigate("/")}>
                 Back to Home
-              </Button>
+              </Button> */}
               <div className="flex gap-3">
                 {!isLoggedIn ? (
                   <>
